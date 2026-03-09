@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Budget Planner</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header>
+    <h1>💰 Budget Planner</h1>
+    <div class="header-actions">
+      <button id="btn-export" class="btn-secondary">
+        ⬇️ Export JSON
+      </button>
+      <button id="btn-import" class="btn-secondary">
+        ⬆️ Import JSON
+      </button>
+      <!-- Hidden file input for import -->
+      <input id="import-file" type="file" accept=".json,application/json"
+             style="display:none" aria-hidden="true" />
+    </div>
+  </header>
+
+  <!-- ── Starting Bank Balance ──────────────────────────── -->
+  <div class="card">
+    <h2>Starting Bank Balance</h2>
+    <div class="balance-bar">
+      <label for="bank-balance">Current Balance ($)</label>
+      <div class="balance-input-wrap">
+        <input id="bank-balance" type="number" step="0.01"
+               placeholder="0.00"
+               aria-label="Current bank balance in dollars" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Budget Items Table ─────────────────────────────── -->
+  <div class="card">
+    <h2>Monthly Budget Items</h2>
+    <div class="table-wrap">
+      <table aria-label="Budget items">
+        <thead>
+          <tr>
+            <th class="col-drag" aria-label="Reorder"></th>
+            <th class="col-active" title="Include in balance">✔</th>
+            <th class="col-day">Day</th>
+            <th class="col-desc">Description</th>
+            <th class="col-amount">Amount</th>
+            <th class="col-balance">Proj. Balance</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="items-tbody">
+          <!-- rows rendered by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Add Item Form ───────────────────────────────────── -->
+  <div class="card">
+    <h2>Add Budget Item</h2>
+    <form id="add-form" class="add-form" novalidate>
+      <div class="field">
+        <label for="add-day">Day</label>
+        <input id="add-day" name="day" type="number"
+               min="1" max="31" placeholder="1"
+               required aria-label="Day of the month (1–31)" />
+      </div>
+      <div class="field">
+        <label for="add-description">Description</label>
+        <input id="add-description" name="description" type="text"
+               placeholder="e.g. Rent, Salary…"
+               required aria-label="Short description" />
+      </div>
+      <div class="field">
+        <label for="add-amount">Amount ($)</label>
+        <input id="add-amount" name="amount" type="number"
+               step="0.01" placeholder="0.00"
+               required aria-label="Dollar amount (negative for expenses)" />
+      </div>
+      <div class="field">
+        <label style="visibility:hidden">Add</label>
+        <button type="submit" class="btn-primary">+ Add Item</button>
+      </div>
+    </form>
+    <p style="margin-top:10px; font-size:0.8rem; color:var(--color-muted);">
+      Tip: use a <strong>negative</strong> amount for expenses (e.g. <em>-1200</em>) and a
+      <strong>positive</strong> amount for income (e.g. <em>2500</em>).
+    </p>
+  </div>
+
+  <!-- ── Edit Modal ─────────────────────────────────────── -->
+  <div id="edit-modal-backdrop" class="modal-backdrop hidden"
+       role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
+    <div class="modal">
+      <h3 id="edit-modal-title">Edit Budget Item</h3>
+      <form id="edit-form" novalidate>
+        <div class="field">
+          <label for="modal-day">Day of Month</label>
+          <input id="modal-day" name="modal-day" type="number"
+                 min="1" max="31" required />
+        </div>
+        <div class="field">
+          <label for="modal-description">Description</label>
+          <input id="modal-description" name="modal-description"
+                 type="text" required />
+        </div>
+        <div class="field">
+          <label for="modal-amount">Amount ($)</label>
+          <input id="modal-amount" name="modal-amount"
+                 type="number" step="0.01" required />
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="modal-cancel" class="btn-secondary">Cancel</button>
+          <button type="submit" class="btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Toast Container ────────────────────────────────── -->
+  <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
